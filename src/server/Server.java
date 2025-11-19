@@ -51,10 +51,12 @@ public class Server {
             } else {
               IO.println("Sende an alle: " + message);
               for (var client : CLIENT_IDS.values()) {
-                new PrintWriter(
-                    new BufferedWriter(
-                        new OutputStreamWriter(client.getClient().getOutputStream())),
-                    true).println(message);
+                synchronized (client.getClient()) {
+                  new PrintWriter(
+                      new BufferedWriter(
+                          new OutputStreamWriter(client.getClient().getOutputStream())),
+                      true).println(message);
+                }
                 IO.println("Sende an  Client(" + client.getID() + ") " + message);
               }
             }
