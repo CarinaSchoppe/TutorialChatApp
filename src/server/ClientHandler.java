@@ -21,6 +21,10 @@ public class ClientHandler implements Runnable {
         "paralleler " +
         "Prozess gestartet");
 
+    //schreib funktion
+
+
+
     //Streamreader / Bufferedstreamreader  -> Ein Eimer wo ich den Datenwasserfluss einsammeln kann
     // und warte bis ich
     // "genug" Daten habe.
@@ -41,8 +45,17 @@ public class ClientHandler implements Runnable {
       }
 
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      IO.println("Verbindung mit " + id + " verloren!");
+      Server.CLIENT_IDS.remove(id);
     }
 
+  }
+
+  public Socket getClient() {
+    return client;
+  }
+
+  public int getID() {
+    return id;
   }
 }

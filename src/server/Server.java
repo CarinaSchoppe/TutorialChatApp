@@ -1,9 +1,13 @@
 package server;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Server {
 
@@ -30,7 +34,39 @@ public class Server {
   static void main() {
 
     try {
+      new Thread(() -> {
+        try {
+          var scanner = new Scanner(System.in);
+          String message;
+          while (!(message = scanner.nextLine()).equalsIgnoreCase("Quit")) {
+            var split = message.split(":", 2);
+            if (split.length >= 2) {
+              message = split[1];
+              var receiver = Integer.parseInt(split[0]);
+              var client = CLIENT_IDS.get(receiver);
+              new PrintWriter(
+                  new BufferedWriter(new OutputStreamWriter(client.getClient().getOutputStream())),
+                  true).println(message);
+              IO.println("Sende an Client(" + client.getID() + ") " + message);
+            } else {
+              IO.println("Sende an alle: " + message);
+              for (var client : CLIENT_IDS.values()) {
+                new PrintWriter(
+                    new BufferedWriter(
+                        new OutputStreamWriter(client.getClient().getOutputStream())),
+                    true).println(message);
+                IO.println("Sende an  Client(" + client.getID() + ") " + message);
+              }
+            }
 
+
+          }
+
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+
+      }).start();
 
       serverSocket = new ServerSocket(PORT);
 
