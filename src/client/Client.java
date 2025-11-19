@@ -9,6 +9,10 @@ import java.util.Scanner;
 
 public class Client {
 
+  //der soll nun auch nachrichten Empfangen können
+
+
+
   private static final int PORT = 12345;
 
   private static final String IP = "localhost";

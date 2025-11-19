@@ -26,7 +26,6 @@ public class ClientHandler implements Runnable {
     // "genug" Daten habe.
 
     try {
-
       var reader = new BufferedReader(
           new InputStreamReader(
               client.getInputStream()
@@ -37,6 +36,8 @@ public class ClientHandler implements Runnable {
       String input;
       while ((input = reader.readLine()) != null) {
         IO.println("Client(" + id + ") sagt: " + input);
+
+
       }
 
     } catch (IOException e) {

@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class Server {
 
-
+  //der soll nun auch Nachrichten senden zu können
   public static final HashMap<Integer, ClientHandler> CLIENT_IDS = new HashMap<>();
 
   /*
@@ -30,6 +30,7 @@ public class Server {
   static void main() {
 
     try {
+
 
       serverSocket = new ServerSocket(PORT);
 
