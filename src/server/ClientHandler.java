@@ -7,15 +7,18 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
 
-  private Socket client;
+  private final Socket client;
+  private final int id;
 
-  public ClientHandler(Socket client) {
+  public ClientHandler(Socket client, int id) {
     this.client = client;
+    this.id = id;
   }
 
   @Override
   public void run() {
-    IO.println("Für den Client: " + client.getRemoteSocketAddress() + " wurde ein paralleler " +
+    IO.println("Für den Client (" + id + "): " + client.getRemoteSocketAddress() + " wurde ein " +
+        "paralleler " +
         "Prozess gestartet");
 
     //Streamreader / Bufferedstreamreader  -> Ein Eimer wo ich den Datenwasserfluss einsammeln kann
@@ -33,7 +36,7 @@ public class ClientHandler implements Runnable {
       //Die reinkommende Zeile vom Sender
       String input;
       while ((input = reader.readLine()) != null) {
-        IO.println("Client sagt: " + input);
+        IO.println("Client(" + id + ") sagt: " + input);
       }
 
     } catch (IOException e) {
