@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Utility {
 
-  private static final String KEY = "0123456789ABCDEF";
+  private static final String KEY = "0123456789ABCDEF0123456789ABCDEF";
 
   private static SecretKeySpec getKey() {
     return new SecretKeySpec(KEY.getBytes(), "AES");
