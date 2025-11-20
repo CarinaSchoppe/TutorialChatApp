@@ -31,7 +31,7 @@ public class Server {
 
   private static ServerSocket serverSocket;
 
-  static void main() {
+  public static void main(String[] args) {
 
     try {
       new Thread(() -> {
@@ -47,9 +47,9 @@ public class Server {
               new PrintWriter(
                   new BufferedWriter(new OutputStreamWriter(client.getClient().getOutputStream())),
                   true).println(message);
-              IO.println("Sende an Client(" + client.getID() + ") " + message);
+              System.out.println("Sende an Client(" + client.getID() + ") " + message);
             } else {
-              IO.println("Sende an alle: " + message);
+              System.out.println("Sende an alle: " + message);
               for (var client : CLIENT_IDS.values()) {
                 synchronized (client.getClient()) {
                   new PrintWriter(
@@ -57,7 +57,6 @@ public class Server {
                           new OutputStreamWriter(client.getClient().getOutputStream())),
                       true).println(message);
                 }
-                IO.println("Sende an  Client(" + client.getID() + ") " + message);
               }
             }
 
@@ -77,7 +76,7 @@ public class Server {
       throw new RuntimeException(exception);
     }
 
-    IO.println("ChatSystem Server erstellt!");
+    System.out.println("ChatSystem Server erstellt!");
 
     var id = 0;
 
@@ -87,7 +86,7 @@ public class Server {
         Socket socket = serverSocket.accept();
 
 
-        IO.println(
+        System.out.println(
             "Client-Verbindung empfangen!" +
                 " IP vom Client: "
                 + socket.getRemoteSocketAddress()
