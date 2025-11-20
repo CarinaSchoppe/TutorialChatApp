@@ -4,8 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.Base64;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import ui.UI;
+import utility.Utility;
 
 public class Reciever implements Runnable {
 
@@ -25,14 +30,23 @@ public class Reciever implements Runnable {
 
       String message;
       while ((message = reader.readLine()) != null) {
-        System.out.println("send" + message);
-        var decoded = Base64.getDecoder().decode(message);
-        message = new String(decoded);
         if (message.equalsIgnoreCase("Quit")) {
           break;
         }
-        System.out.println(message);
-        ui.addMessage(message);
+        try {
+          System.out.println(Utility.decrypt(message));
+          ui.addMessage(Utility.decrypt(message));
+        } catch (NoSuchPaddingException e) {
+          throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+          throw new RuntimeException(e);
+        } catch (InvalidKeyException e) {
+          throw new RuntimeException(e);
+        } catch (IllegalBlockSizeException e) {
+          throw new RuntimeException(e);
+        } catch (BadPaddingException e) {
+          throw new RuntimeException(e);
+        }
       }
 
     } catch (IOException e) {

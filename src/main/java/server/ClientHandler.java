@@ -7,7 +7,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Base64;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import utility.Utility;
 
 public class ClientHandler implements Runnable {
 
@@ -52,10 +57,21 @@ public class ClientHandler implements Runnable {
       //Die reinkommende Zeile vom Sender
       String input;
       while ((input = reader.readLine()) != null) {
-        var decoded = Base64.getDecoder().decode(input.getBytes());
-        var msg = "Client[" + id + "] " + new String(decoded);
-        System.out.println(msg);
-        broadcast(msg);
+        try {
+          var msg = "Client[" + id + "] " + Utility.decrypt(input);
+          System.out.println(msg);
+          broadcast(msg);
+        } catch (NoSuchPaddingException e) {
+          throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+          throw new RuntimeException(e);
+        } catch (InvalidKeyException e) {
+          throw new RuntimeException(e);
+        } catch (IllegalBlockSizeException e) {
+          throw new RuntimeException(e);
+        } catch (BadPaddingException e) {
+          throw new RuntimeException(e);
+        }
       }
 
     } catch (IOException e) {
@@ -66,12 +82,22 @@ public class ClientHandler implements Runnable {
 
   }
 
-  private void broadcast(String message) {
+  public void broadcast(String message) {
     System.out.println(message);
-    var encoded = Base64.getEncoder().encode(message.getBytes());
-    message = new String(encoded);
     for (var user : Server.CLIENT_IDS.values()) {
-      user.writer.println(message);
+      try {
+        user.writer.println(Utility.encrypt(message));
+      } catch (NoSuchPaddingException e) {
+        throw new RuntimeException(e);
+      } catch (NoSuchAlgorithmException e) {
+        throw new RuntimeException(e);
+      } catch (InvalidKeyException e) {
+        throw new RuntimeException(e);
+      } catch (IllegalBlockSizeException e) {
+        throw new RuntimeException(e);
+      } catch (BadPaddingException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 

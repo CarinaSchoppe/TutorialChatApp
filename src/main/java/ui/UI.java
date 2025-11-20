@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.Base64;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -14,6 +15,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import utility.Utility;
 
 public class UI {
 
@@ -44,15 +49,23 @@ public class UI {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    System.out.println("Wir schicken an den Server: " + textfield.getText());
     //convert string to byte array
     var message = textfield.getText();
-    var bytes = message.getBytes();
-    var encode = Base64.getEncoder().encode(bytes);
-    var encoded = new String(encode);
     System.out.println("Wir senden an alle: " + message);
-    writer.println(encoded);
-    textfield.clear();
+    try {
+      writer.println(Utility.encrypt(message));
+      textfield.clear();
+    } catch (NoSuchPaddingException e) {
+      throw new RuntimeException(e);
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    } catch (InvalidKeyException e) {
+      throw new RuntimeException(e);
+    } catch (IllegalBlockSizeException e) {
+      throw new RuntimeException(e);
+    } catch (BadPaddingException e) {
+      throw new RuntimeException(e);
+    }
 
   }
 

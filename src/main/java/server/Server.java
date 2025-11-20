@@ -50,17 +50,8 @@ public class Server {
               System.out.println("Sende an Client(" + client.getID() + ") " + message);
             } else {
               System.out.println("Sende an alle: " + message);
-              for (var client : CLIENT_IDS.values()) {
-                synchronized (client.getClient()) {
-                  new PrintWriter(
-                      new BufferedWriter(
-                          new OutputStreamWriter(client.getClient().getOutputStream())),
-                      true).println(message);
-                }
-              }
+              ((ClientHandler) CLIENT_IDS.values().toArray()[0]).broadcast(message);
             }
-
-
           }
 
         } catch (IOException e) {
@@ -71,7 +62,8 @@ public class Server {
 
       serverSocket = new ServerSocket(PORT);
 
-    } catch (IOException exception) {
+    } catch (
+        IOException exception) {
 
       throw new RuntimeException(exception);
     }
